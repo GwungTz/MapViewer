@@ -78,6 +78,16 @@ async function main() {
       'first screen must not request indexes: ' + requestedUrls.join(', ')
     );
     console.log('first screen', JSON.stringify(first));
+    console.log(
+      'memory bars',
+      JSON.stringify(
+        await page.evaluate(() => ({
+          rom: document.getElementById('rom-text').textContent,
+          ram: document.getElementById('ram-text').textContent,
+          romTitle: document.getElementById('rom-fill').closest('.memory-bar').title,
+        }))
+      )
+    );
 
     const overlayVisibility = await page.evaluate(() => {
       const ids = ['loading', 'error-banner', 'empty-state', 'search-panel'];

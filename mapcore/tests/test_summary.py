@@ -64,6 +64,43 @@ class EideSummaryTests(unittest.TestCase):
         self.assertEqual(totals.total_rom, 366)
 
 
+class RamOnlySummaryTests(unittest.TestCase):
+    CONTENT = """Archive member included to satisfy reference by file (symbol)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+RAM              0x10200000         0x00600000         rw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD build/firmware.elf
+.text           0x10200000       0x100
+ .text.foo      0x10200000       0x100 build/main.o
+.data           0x10200100       0x20
+ .data.var      0x10200100       0x20 build/main.o
+"""
+
+    def test_ram_only_image_has_no_flash_capacity(self) -> None:
+        from mapcore.parser import parse_map_text
+
+        data = parse_map_text(self.CONTENT)
+        summary = build_memory_summary(data)
+        self.assertGreater(summary.rom.used, 0)
+        self.assertEqual(summary.rom.total, 0)
+        self.assertEqual(summary.rom.percent, 0)
+        self.assertEqual(summary.ram.total, 0x600000)
+
+    def test_explicit_override_still_wins(self) -> None:
+        from mapcore.parser import parse_map_text
+
+        data = parse_map_text(self.CONTENT)
+        summary = build_memory_summary(data, MemoryOverrides(rom_kb=1024, ram_kb=64))
+        self.assertEqual(summary.rom.total, 1024 * 1024)
+        self.assertEqual(summary.ram.total, 64 * 1024)
+
+
 class GnuSummaryTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:

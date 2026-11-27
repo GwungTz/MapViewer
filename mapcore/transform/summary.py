@@ -146,7 +146,32 @@ def build_memory_summary(
         if ram_region is None and bss_section is not None:
             ram_region = find_region(bss_section.exec_base)
 
-        rom_total = rom_override if rom_override > 0 else (rom_region.length if rom_region else 0)
+        # A ROM/Flash capacity only exists when the linker declares a region
+        # that is actually distinct from the RAM region (or is explicitly
+        # read-only).  Many RAM-loaded images place .text/.data/.bss in one
+        # "rw" region; reporting that region's length as both ROM and RAM is
+        # misleading, so leave the ROM capacity unknown (0) in that case.
+        rom_is_distinct = False
+        if rom_region is not None:
+            same_as_ram = (
+                ram_region is not None
+                and rom_region.name == ram_region.name
+                and rom_region.origin == ram_region.origin
+            )
+            attrs = rom_region.attrs.lower()
+            read_only = "w" not in attrs
+            looks_like_flash = any(
+                token in rom_region.name.upper()
+                for token in ("FLASH", "ROM", "IROM", "CODE")
+            )
+            rom_is_distinct = not same_as_ram and (read_only or looks_like_flash)
+
+        if rom_override > 0:
+            rom_total = rom_override
+        elif rom_is_distinct and rom_region is not None:
+            rom_total = rom_region.length
+        else:
+            rom_total = 0
         ram_total = ram_override if ram_override > 0 else (ram_region.length if ram_region else 0)
         rom_used = totals.total_rom
         ram_used = totals.total_rw

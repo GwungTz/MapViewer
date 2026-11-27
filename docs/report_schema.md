@@ -116,7 +116,7 @@
 |---|---|
 | `schema_version` | 当前固定为 `1`；不兼容变更必须递增 |
 | `source.sha256` | 原始 `.map` 字节的 SHA-256；网页内存配置以它为 key |
-| `summary` | ROM/RAM 用量与容量（Keil 取 IROM/IRAM 执行区域，GNU ld 取 Memory Configuration） |
+| `summary` | ROM/RAM 用量与容量（Keil 取 IROM/IRAM 执行区域，GNU ld 取 Memory Configuration）；`total = 0` 表示 MAP 未声明可识别的 ROM/Flash 或 RAM 区域，容量未知，UI 显示 `used / –` |
 | `grand_totals` | 链接器报告/组件表汇总的 Code/RO/RW/ZI 与总计 |
 | `views.*.root_chunk` | 首屏唯一需要的 node 分片 |
 | `views.region.total_bytes` | Region 视图中实际布局的字节数（包含 PAD） |

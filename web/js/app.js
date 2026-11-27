@@ -920,11 +920,11 @@
     const ramKb = Number(state.memory.ramKb) || 0;
     const romTotal = romKb > 0 ? romKb * 1024 : summary.rom.total;
     const ramTotal = ramKb > 0 ? ramKb * 1024 : summary.ram.total;
-    setMemoryBar(el.romFill, el.romText, summary.rom.used, romTotal);
-    setMemoryBar(el.ramFill, el.ramText, summary.ram.used, ramTotal);
+    setMemoryBar(el.romFill, el.romText, summary.rom.used, romTotal, 'ROM/Flash');
+    setMemoryBar(el.ramFill, el.ramText, summary.ram.used, ramTotal, 'RAM');
   }
 
-  function setMemoryBar(fill, text, used, total) {
+  function setMemoryBar(fill, text, used, total, label) {
     const percent = total > 0 ? (used / total) * 100 : 0;
     fill.style.width = Math.min(100, Math.max(0, percent)) + '%';
     if (total > 0) {
@@ -932,6 +932,13 @@
         formatBytes(used) + ' / ' + formatBytes(total) + ' (' + percent.toFixed(1) + '%)';
     } else {
       text.textContent = formatBytes(used) + ' / –';
+    }
+    const bar = fill.closest('.memory-bar');
+    if (bar) {
+      bar.title =
+        total > 0
+          ? label + ' usage reported by the linker'
+          : 'The MAP declares no ' + label + ' memory region; only the used bytes are known.';
     }
     fill.parentElement.setAttribute('aria-valuenow', String(Math.round(percent)));
   }
