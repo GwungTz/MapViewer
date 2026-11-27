@@ -79,11 +79,29 @@ async function main() {
     );
     console.log('first screen', JSON.stringify(first));
 
+    const overlayVisibility = await page.evaluate(() => {
+      const ids = ['loading', 'error-banner', 'empty-state', 'search-panel'];
+      return ids.map((id) => {
+        const element = document.getElementById(id);
+        return { id, hidden: element.hidden, display: getComputedStyle(element).display };
+      });
+    });
+    for (const overlay of overlayVisibility) {
+      check(
+        overlay.display === 'none',
+        'overlay ' + overlay.id + ' must not be visible after the first render (' + overlay.display + ')'
+      );
+    }
+
     const drilled = await step('drill region', () =>
       page.evaluate(() => window.__mapviewDebug.drillFirstChild())
     );
     check(drilled.path.length === 1, 'region drill should add one path entry');
     check(drilled.children > 0, 'region drill should show objects');
+    const backDisplay = await page.evaluate(
+      () => getComputedStyle(document.getElementById('btn-back')).display
+    );
+    check(backDisplay !== 'none', 'back button must be visible after drilling');
 
     const back = await step('back to root', () => page.evaluate(() => window.__mapviewDebug.goBack()));
     check(back.path.length === 0, 'back should restore the view root');

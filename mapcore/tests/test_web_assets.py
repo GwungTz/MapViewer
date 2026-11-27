@@ -45,6 +45,11 @@ class WebAssetTests(unittest.TestCase):
             self.assertNotIn(".innerHTML", text, relative)
             self.assertNotIn("insertAdjacentHTML", text, relative)
 
+    def test_hidden_attribute_beats_flex_layout(self) -> None:
+        css = self.texts["css/style.css"]
+        self.assertIn("[hidden]", css)
+        self.assertIn("display: none !important", css)
+
     def test_csp_is_strict_and_local(self) -> None:
         html = self.texts["index.html"]
         self.assertIn("default-src 'self'", html)
