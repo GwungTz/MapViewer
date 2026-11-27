@@ -38,7 +38,9 @@ mapview = "app.main:main"
 mapview-cli = "mapcore.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/charcoal141/Map-View"
+Homepage = "https://github.com/GwungTz/MapViewer"
+Source = "https://github.com/GwungTz/MapViewer"
+Upstream = "https://github.com/charcoal141/Map-View"
 
 [tool.setuptools]
 packages = [
