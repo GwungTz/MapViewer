@@ -1,0 +1,14 @@
+{
+  "name": "mapview-upstream-parity",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Bundle the pinned upstream Map-View TypeScript parser for parity tests",
+  "type": "commonjs",
+  "scripts": {
+    "build": "esbuild ../../third_party/Map-View/src/parser/index.ts --bundle --platform=node --format=cjs --outfile=upstream-parser.cjs",
+    "compare": "node compare.js"
+  },
+  "dependencies": {
+    "esbuild": "^0.25.1"
+  }
+}

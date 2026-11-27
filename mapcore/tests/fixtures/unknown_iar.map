@@ -1,0 +1,9 @@
+IAR ELF Linker V9.20.1.300/W32 for ARM
+
+MODULE SUMMARY
+---------------
+
+    Object file                     Code    Data     RO Data   RW Data   ZI Data
+    ---------------------------------------------------------------------------
+    main.o                            64       0          8         4        32
+    startup.o                         32       0         16         0         0

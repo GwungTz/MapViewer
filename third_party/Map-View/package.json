@@ -1,0 +1,97 @@
+{
+  "name": "map-view-embedded",
+  "displayName": "Map View Embedded",
+  "description": "A VS Code extension that visualizes embedded .map files as interactive treemap heatmaps — see where your firmware memory goes at a glance.",
+  "version": "2.7.0",
+  "publisher": "charcoal141",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/charcoal141/Map-View"
+  },
+  "license": "MIT",
+  "icon": "media/logo.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Visualization"
+  ],
+  "keywords": [
+    "keil",
+    "arm",
+    "gcc",
+    "esp32",
+    "risc-v",
+    "map",
+    "memory",
+    "heatmap",
+    "treemap",
+    "embedded"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "keilMapHeatmap.openFile",
+        "title": "Open Map View",
+        "category": "Map View"
+      },
+      {
+        "command": "keilMapHeatmap.openActive",
+        "title": "Show Map View for Current File",
+        "category": "Map View"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "keilMapHeatmap.openFile",
+          "when": "resourceExtname == .map",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "keilMapHeatmap.openActive",
+          "when": "resourceExtname == .map",
+          "group": "navigation"
+        }
+      ]
+    },
+    "languages": [
+      {
+        "id": "map",
+        "extensions": [
+          ".map"
+        ],
+        "aliases": [
+          "MAP File"
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "Keil MAP Heatmap",
+      "properties": {
+        "keilMapHeatmap.memoryConfig": {
+          "type": "object",
+          "default": {},
+          "description": "Per-file ROM/RAM size overrides in KB. Key is MAP filename, value is {rom, ram}. Example: {\"LM_Series_APP.map\": {\"rom\": 256, \"ram\": 96}}"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "watch": "npm run build -- --watch",
+    "package": "vsce package",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^2.22.0",
+    "esbuild": "^0.19.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  }
+}

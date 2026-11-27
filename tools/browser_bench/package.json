@@ -1,0 +1,9 @@
+{
+  "name": "mapview-browser-bench",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Headless browser benchmarks for Map View reports",
+  "dependencies": {
+    "playwright-core": "^1.49.0"
+  }
+}

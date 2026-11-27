@@ -1,0 +1,50 @@
+Archive member included to satisfy reference by file (symbol)
+
+esp-idf/log/liblog.a(log.c.obj)   build/main.o (esp_log_write)
+
+Discarded input sections
+
+ .text          0x0000000000000000        0x0 build/main.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+iram0_0_seg      0x0000000040080000 0x0000000000040000 xrw
+drom0_0_seg      0x000000003f400020 0x0000000000c00000 r
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD build/firmware.elf
+                0x0000000040080000                _image_irom_start = .
+.text           0x000000003f400020      0x100
+ *(.literal .text)
+ .literal.app_main
+                0x000000003f400020       0x10 build/main.o
+                0x000000003f400030                app_main
+ .text.app_main
+                0x000000003f400030       0x40 build/main.o
+                0x000000003f400070                app_main
+ .text.esp_log_write
+                0x000000003f400070       0x20 esp-idf/log/liblog.a(log.c.obj)
+                0x000000003f400090                esp_log_write
+ *fill*         0x000000003f400090        0x8
+.rodata         0x000000003f400098       0x20
+ .rodata.str1.1
+                0x000000003f400098       0x18 build/main.o
+ .rodata.const
+                0x000000003f4000b0       0x8 esp-idf/log/liblog.a(log.c.obj)
+.data           0x0000000040080000      0x100 load address 0x000000003f4000d0
+ .data.counter
+                0x0000000040080000        0x8 build/main.o
+ .data.buffer
+                0x0000000040080008       0x20 esp-idf/log/liblog.a(log.c.obj)
+.bss            0x0000000040080100       0x40
+ .bss.stack
+                0x0000000040080100       0x30 build/main.o
+ *fill*         0x0000000040080130       0x10
+.eh_frame       0x0000000040080140       0x10
+ *fill*         0x0000000040080140        0x8
+ .eh_frame      0x0000000040080148        0x8 build/main.o
+.debug_info     0x0000000000000000      0x200
+ .debug_info    0x0000000000000000      0x200 build/main.o

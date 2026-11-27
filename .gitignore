@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build outputs
+build/
+dist/
+*.spec.bak
+
+# Generated reports / benchmarks
+*.mapview/
+*.mapview.bak-*
+*.mapview.tmp-*
+
+# Node tooling (upstream parity + browser benchmark)
+tools/upstream_parity/node_modules/
+tools/upstream_parity/nul
+tools/browser_bench/node_modules/
+
+# Logs / editor
+*.log
+.vscode/
+.idea/

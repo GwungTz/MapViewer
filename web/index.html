@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; worker-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'"
+  />
+  <title>Map View Report</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="toolbar">
+      <div class="toolbar-left">
+        <button id="btn-back" class="icon-button" title="Back (Backspace)" hidden>← Back</button>
+        <div class="title-block">
+          <div id="report-title" class="report-title">Map View</div>
+          <nav id="breadcrumb" class="breadcrumb" aria-label="Breadcrumb"></nav>
+        </div>
+      </div>
+
+      <div class="memory-bars">
+        <div class="memory-bar" title="ROM usage reported by the linker">
+          <span class="bar-label">ROM</span>
+          <div class="progress" role="progressbar" aria-label="ROM usage">
+            <div id="rom-fill" class="progress-fill rom-fill"></div>
+          </div>
+          <span id="rom-text" class="bar-text">–</span>
+        </div>
+        <div class="memory-bar" title="RAM usage reported by the linker">
+          <span class="bar-label">RAM</span>
+          <div class="progress" role="progressbar" aria-label="RAM usage">
+            <div id="ram-fill" class="progress-fill ram-fill"></div>
+          </div>
+          <span id="ram-text" class="bar-text">–</span>
+        </div>
+        <button id="btn-config" class="icon-button" title="Configure ROM/RAM capacity">⚙</button>
+      </div>
+
+      <div class="toolbar-right">
+        <div class="view-switch" role="tablist" aria-label="View">
+          <button id="view-region" class="view-button active" data-view="region" role="tab" aria-selected="true">Region</button>
+          <button id="view-module" class="view-button" data-view="module" role="tab" aria-selected="false">Module</button>
+        </div>
+        <div class="search-box">
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Search symbol, object, module, 0xADDR…"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Search the map"
+          />
+          <button id="search-clear" class="search-clear" title="Clear search" hidden>×</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="legend" class="legend">
+      <span class="legend-item"><span class="legend-swatch code"></span>Code <span id="legend-code" class="legend-value"></span></span>
+      <span class="legend-item"><span class="legend-swatch rodata"></span>RO-Data <span id="legend-rodata" class="legend-value"></span></span>
+      <span class="legend-item"><span class="legend-swatch rwdata"></span>RW-Data <span id="legend-rwdata" class="legend-value"></span></span>
+      <span class="legend-item"><span class="legend-swatch zidata"></span>ZI-Data <span id="legend-zidata" class="legend-value"></span></span>
+      <span class="legend-item"><span class="legend-swatch pad"></span>PAD <span id="legend-pad" class="legend-value"></span></span>
+      <span id="report-meta" class="legend-meta"></span>
+    </div>
+
+    <main id="workspace">
+      <div id="treemap-host">
+        <canvas id="treemap-canvas" aria-label="Treemap visualization"></canvas>
+        <canvas id="treemap-overlay" aria-hidden="true"></canvas>
+        <div id="empty-state" class="empty-state" hidden></div>
+        <div id="loading" class="loading" hidden>
+          <span class="spinner" aria-hidden="true"></span>
+          <span id="loading-text">Loading…</span>
+        </div>
+        <div id="error-banner" class="error-banner" hidden role="alert">
+          <strong id="error-title">Report error</strong>
+          <span id="error-message"></span>
+          <button id="error-close" class="error-close" title="Dismiss">×</button>
+        </div>
+      </div>
+
+      <section id="search-panel" class="search-panel" hidden aria-label="Search results">
+        <header class="search-panel-header">
+          <span id="search-summary">Search</span>
+          <button id="search-close" class="icon-button" title="Close">×</button>
+        </header>
+        <ul id="search-results" class="search-results"></ul>
+      </section>
+    </main>
+
+    <div id="tooltip" class="tooltip" hidden role="tooltip"></div>
+    <div id="toast" class="toast" hidden></div>
+
+    <dialog id="config-dialog" class="dialog">
+      <form method="dialog" id="config-form">
+        <h2>Memory capacity</h2>
+        <p class="hint">
+          Values in KiB. 0 keeps the linker's reported maximum. The override is stored in
+          this browser, keyed by the source MAP file SHA-256.
+        </p>
+        <label class="field">ROM (Flash) <input id="config-rom" type="number" min="0" step="1" /></label>
+        <label class="field">RAM <input id="config-ram" type="number" min="0" step="1" /></label>
+        <p id="config-reported" class="hint"></p>
+        <div class="dialog-actions">
+          <button value="cancel" type="submit" class="secondary">Cancel</button>
+          <button id="config-save" value="default" type="button" class="primary">Apply</button>
+        </div>
+      </form>
+    </dialog>
+  </div>
+
+  <script src="assets/treemap.js" defer></script>
+  <script src="assets/app.js" defer></script>
+</body>
+</html>

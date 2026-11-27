@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mapview-local"
+version = "0.1.0"
+description = "Standalone embedded MAP file analyzer: Python parser + local browser treemap"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Map View Local contributors" }]
+keywords = ["embedded", "map", "keil", "gnu-ld", "esp-idf", "treemap", "pyqt6"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: X11 Applications :: Qt",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Embedded Systems",
+  "Topic :: Software Development :: Build Tools",
+]
+dependencies = []
+
+[project.optional-dependencies]
+gui = ["PyQt6>=6.5"]
+dev = ["pytest>=8"]
+build = ["pyinstaller>=6.0"]
+
+[project.scripts]
+mapview = "app.main:main"
+mapview-cli = "mapcore.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/charcoal141/Map-View"
+
+[tool.setuptools]
+packages = [
+  "app",
+  "mapcore",
+  "mapcore.parser",
+  "mapcore.transform",
+  "mapcore.export",
+]
+
+[tool.setuptools.data-files]
+"web" = ["web/index.html", "web/favicon.svg"]
+"web/css" = ["web/css/style.css"]
+"web/js" = [
+  "web/js/app.js",
+  "web/js/treemap.js",
+  "web/js/data-worker.js",
+]
+"docs" = [
+  "docs/report_schema.md",
+  "docs/UPSTREAM_PARITY.md",
+  "docs/performance.md",
+  "THIRD_PARTY_NOTICES.md",
+  "LICENSE",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["mapcore/tests"]
+addopts = "-ra"
